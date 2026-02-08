@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">APK Analyzer</string>
+    
+    <!-- Main Activity -->
+    <string name="search_apps">Search apps…</string>
+    <string name="apps_installed">%d apps installed</string>
+    <string name="filter_all">All Apps</string>
+    <string name="filter_user">User Apps</string>
+    <string name="filter_system">System Apps</string>
+    <string name="filter_unknown">Unknown Source</string>
+    
+    <!-- App Details -->
+    <string name="app_info">App Info</string>
+    <string name="open">Open</string>
+    <string name="share">Share</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="general_information">General Information</string>
+    <string name="package_name">Package Name</string>
+    <string name="size">Size</string>
+    <string name="installed">Installed</string>
+    <string name="last_updated">Last Updated</string>
+    <string name="developer">Developer</string>
+    <string name="category">Category</string>
+    <string name="version">Version</string>
+    <string name="version_code">Version Code</string>
+    <string name="target_sdk">Target SDK</string>
+    <string name="min_sdk">Min SDK</string>
+    <string name="apk_path">APK Path</string>
+    <string name="data_directory">Data Directory</string>
+    <string name="native_library">Native Library</string>
+    <string name="uid">UID</string>
+    <string name="install_source">Install Source</string>
+    
+    <!-- Security Information -->
+    <string name="security_information">Security Information</string>
+    <string name="signature_sha256">Signature SHA-256</string>
+    <string name="is_system_app">System App</string>
+    
+    <!-- Components -->
+    <string name="components">Components</string>
+    <string name="activities">Activities</string>
+    <string name="services">Services</string>
+    <string name="receivers">Receivers</string>
+    <string name="providers">Providers</string>
+    
+    <!-- Permissions -->
+    <string name="permissions">Permissions</string>
+    <string name="permissions_count">%d permissions</string>
+    <string name="no_permissions">No permissions required</string>
+    
+    <!-- Actions -->
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="tap_to_copy">Tap to copy</string>
+    
+    <!-- Messages -->
+    <string name="loading">Loading apps…</string>
+    <string name="no_apps_found">No apps found</string>
+    <string name="cannot_open_app">Cannot open this app</string>
+    <string name="cannot_uninstall_system_app">Cannot uninstall system apps</string>
+</resources>
