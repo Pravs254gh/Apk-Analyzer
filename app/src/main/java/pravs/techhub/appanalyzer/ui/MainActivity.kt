@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MotionEvent
 import android.view.View
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -121,10 +123,9 @@ class MainActivity : AppCompatActivity() {
                 AppFilter.ALL -> true
                 AppFilter.USER -> !app.isSystemApp
                 AppFilter.SYSTEM -> app.isSystemApp
-                AppFilter.UNKNOWN_SOURCE -> app.installSource == "Unknown" ||
-                        app.installSource.isEmpty() ||
-                        (!app.installSource.contains("com.android.vending") &&
-                                !app.installSource.contains("play"))
+                AppFilter.UNKNOWN_SOURCE -> app.installSource == "Unknown" && app.isSystemApp.not() ||
+                        app.installSource.isEmpty() && app.isSystemApp.not() ||
+                        (AppInfoManager.listOfOEM.contains(app.installSource).not() && app.isSystemApp.not())
             }
 
             // Apply search
@@ -132,7 +133,10 @@ class MainActivity : AppCompatActivity() {
                 true
             } else {
                 app.appName.lowercase().contains(searchQuery) ||
-                        app.packageName.lowercase().contains(searchQuery)
+                        app.packageName.lowercase().contains(searchQuery) ||
+                        app.signatureMD5.lowercase().contains(searchQuery.lowercase()) ||
+                        app.signatureSha256.lowercase().contains(searchQuery.lowercase()) ||
+                        app.signatureSha1.lowercase().contains(searchQuery.lowercase())
             }
 
             matchesFilter && matchesSearch

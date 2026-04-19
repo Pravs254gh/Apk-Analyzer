@@ -19,6 +19,8 @@ data class AppInfo(
     val apkPath: String,
     val isSystemApp: Boolean,
     val signatureSha256: String,
+    val signatureSha1: String,
+    val signatureMD5: String,
     val permissions: List<String>,
     val activities: List<String>,
     val services: List<String>,

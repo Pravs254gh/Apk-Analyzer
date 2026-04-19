@@ -14,6 +14,7 @@ import java.util.*
 
 object AppInfoManager {
 
+    val listOfOEM = linkedSetOf("com.android.vending","com.xiaomi.market","com.xiaomi.mipicks","com.oppo.market","com.vivo.appstore","com.sec.android.app.samsungapps","com.huawei.appmarket","com.coloros.gamespace","com.heytap.market","com.lenovo.leos.appstore","com.amazon.venezia","com.oneplus.market","com.realme.appmarket","com.elevenadmin.elevendevice","com.android.managedprovisioning","com.indus.appstore")
     fun getAllInstalledApps(context: Context): List<AppInfo> {
         val packageManager = context.packageManager
         val packages = packageManager.getInstalledPackages(
@@ -51,7 +52,9 @@ object AppInfoManager {
 
         val isSystemApp = (applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM) != 0
 
-        val signatureSha256 = getSignatureSha256(packageInfo)
+        val signatureSha256 = getSignatureSha256(packageInfo).replace(":", "")
+        val signatureSha1 = getSignatureSha1(packageInfo).replace(":", "")
+        val signatureMD5 = getSignatureMd5(packageInfo).replace(":", "")
 
         val permissions = packageInfo.requestedPermissions?.toList() ?: emptyList()
 
@@ -104,6 +107,8 @@ object AppInfoManager {
             apkPath = applicationInfo.sourceDir?:"null",
             isSystemApp = isSystemApp,
             signatureSha256 = signatureSha256,
+            signatureSha1 = signatureSha1,
+            signatureMD5 = signatureMD5,
             permissions = permissions,
             activities = activities,
             services = services,
@@ -115,8 +120,16 @@ object AppInfoManager {
             installSource = installSource
         )
     }
-
+    private fun getSignatureMd5(packageInfo: PackageInfo): String {
+        return getSignatureHash(packageInfo, "MD5")
+    }
+    private fun getSignatureSha1(packageInfo: PackageInfo): String {
+        return getSignatureHash(packageInfo, "SHA-1")
+    }
     private fun getSignatureSha256(packageInfo: PackageInfo): String {
+        return getSignatureHash(packageInfo, "SHA-256")
+    }
+    private fun getSignatureHash(packageInfo: PackageInfo, algorithm: String): String {
         return try {
             val signatures = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 packageInfo.signingInfo?.let { signingInfo ->
@@ -133,12 +146,13 @@ object AppInfoManager {
 
             if (signatures != null && signatures.isNotEmpty()) {
                 val cert = signatures[0].toByteArray()
-                val md = MessageDigest.getInstance("SHA-256")
+                val md = MessageDigest.getInstance(algorithm)
                 val digest = md.digest(cert)
                 digest.joinToString(":") { String.format("%02x", it) }
             } else {
                 "Not Available"
             }
+
         } catch (e: Exception) {
             "Error: ${e.message}"
         }

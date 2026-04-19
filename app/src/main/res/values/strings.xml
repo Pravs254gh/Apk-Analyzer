@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">APK Analyzer</string>
+    <string name="app_name">AppToolKit</string>
     
     <!-- Main Activity -->
     <string name="search_apps">Search apps…</string>
@@ -35,6 +35,8 @@
     <!-- Security Information -->
     <string name="security_information">Security Information</string>
     <string name="signature_sha256">Signature SHA-256</string>
+    <string name="signature_sha1">Signature SHA-1</string>
+    <string name="signature_md5">Signature MD5</string>
     <string name="is_system_app">System App</string>
     
     <!-- Components -->

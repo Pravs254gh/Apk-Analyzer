@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -16,14 +15,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import pravs.techhub.appanalyzer.model.AppInfo
-import pravs.techhub.appanalyzer.utils.AppInfoManager
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pravs.techhub.appanalyzer.R
+import pravs.techhub.appanalyzer.model.AppInfo
+import pravs.techhub.appanalyzer.utils.AppInfoManager
 
 class AppDetailActivity : AppCompatActivity() {
 
@@ -40,6 +41,18 @@ class AppDetailActivity : AppCompatActivity() {
     private lateinit var componentsContainer: LinearLayout
     private lateinit var permissionsContainer: LinearLayout
 
+    // Chips
+    private lateinit var chipGeneral: Chip
+    private lateinit var chipSecurity: Chip
+    private lateinit var chipComponents: Chip
+    private lateinit var chipPermissions: Chip
+
+    // Layouts
+    private lateinit var layoutGeneral: View
+    private lateinit var layoutSecurity: View
+    private lateinit var layoutComponents: View
+    private lateinit var layoutPermissions: View
+
     private var appInfo: AppInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +61,7 @@ class AppDetailActivity : AppCompatActivity() {
 
         initViews()
         setupToolbar()
+        setupSectionSwitching()
         loadAppDetails()
     }
 
@@ -57,21 +71,49 @@ class AppDetailActivity : AppCompatActivity() {
         appName = findViewById(R.id.appName)
         developerName = findViewById(R.id.developerName)
         categoryText = findViewById(R.id.categoryText)
+
         openButton = findViewById(R.id.openButton)
         shareButton = findViewById(R.id.shareButton)
         uninstallButton = findViewById(R.id.uninstallButton)
+
         generalInfoContainer = findViewById(R.id.generalInfoContainer)
         securityInfoContainer = findViewById(R.id.securityInfoContainer)
         componentsContainer = findViewById(R.id.componentsContainer)
+
         permissionsContainer = findViewById(R.id.permissionsContainer)
+
+        chipGeneral = findViewById(R.id.chipGeneral)
+        chipSecurity = findViewById(R.id.chipSecurity)
+        chipComponents = findViewById(R.id.chipComponents)
+        chipPermissions = findViewById(R.id.chipPermissions)
+
+        layoutGeneral = findViewById(R.id.layoutGeneral)
+        layoutSecurity = findViewById(R.id.layoutSecurity)
+        layoutComponents = findViewById(R.id.layoutComponents)
+        layoutPermissions = findViewById(R.id.layoutPermissions)
     }
 
     private fun setupToolbar() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        toolbar.setNavigationOnClickListener {
-            finish()
+        toolbar.setNavigationOnClickListener { finish() }
+    }
+
+    private fun setupSectionSwitching() {
+
+        fun showOnly(view: View) {
+            layoutGeneral.visibility = View.GONE
+            layoutSecurity.visibility = View.GONE
+            layoutComponents.visibility = View.GONE
+            layoutPermissions.visibility = View.GONE
+
+            view.visibility = View.VISIBLE
         }
+
+        chipGeneral.setOnClickListener { showOnly(layoutGeneral) }
+        chipSecurity.setOnClickListener { showOnly(layoutSecurity) }
+        chipComponents.setOnClickListener { showOnly(layoutComponents) }
+        chipPermissions.setOnClickListener { showOnly(layoutPermissions) }
     }
 
     private fun loadAppDetails() {
@@ -88,140 +130,38 @@ class AppDetailActivity : AppCompatActivity() {
     }
 
     private fun displayAppDetails(app: AppInfo) {
-        // Header Information
+
+        // Header
         appIcon.setImageDrawable(app.icon)
         appName.text = app.appName
         developerName.text = app.developer
         categoryText.text = "${app.category} • v${app.versionName}"
 
-        // Button Actions
         setupButtons(app)
 
-        // General Information
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.package_name),
-            app.packageName
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.version),
-            app.versionName
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.version_code),
-            app.versionCode.toString()
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.size),
-            AppInfoManager.formatSize(app.size)
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.installed),
-            AppInfoManager.formatDate(app.installedDate)
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.last_updated),
-            AppInfoManager.formatDate(app.lastUpdated)
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.target_sdk),
-            app.targetSdk.toString()
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.min_sdk),
-            app.minSdk.toString()
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.apk_path),
-            app.apkPath
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.data_directory),
-            app.dataDir
-        )
-        app.nativeLibraryDir?.let {
-            addInfoField(
-                generalInfoContainer,
-                R.drawable.ic_info,
-                getString(R.string.native_library),
-                it
-            )
-        }
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.uid),
-            app.uid.toString()
-        )
-        addInfoField(
-            generalInfoContainer,
-            R.drawable.ic_info,
-            getString(R.string.install_source),
-            app.installSource,
-            isLast = true
-        )
+        // GENERAL
+        addInfoField(generalInfoContainer, R.drawable.ic_info, "Package", app.packageName)
+        addInfoField(generalInfoContainer, R.drawable.ic_info, "Version", app.versionName)
+        addInfoField(generalInfoContainer, R.drawable.ic_info, "Version Code", app.versionCode.toString())
+        addInfoField(generalInfoContainer, R.drawable.ic_info, "Size", AppInfoManager.formatSize(app.size))
+        addInfoField(generalInfoContainer, R.drawable.ic_info, "Installed", AppInfoManager.formatDate(app.installedDate))
+        addInfoField(generalInfoContainer, R.drawable.ic_info, "Updated", AppInfoManager.formatDate(app.lastUpdated))
+        addInfoField(generalInfoContainer, R.drawable.ic_info, "Target SDK", app.targetSdk.toString())
+        addInfoField(generalInfoContainer, R.drawable.ic_info, "Min SDK", app.minSdk.toString())
 
-        // Security Information
-        addInfoField(
-            securityInfoContainer,
-            R.drawable.ic_security,
-            getString(R.string.signature_sha256),
-            app.signatureSha256
-        )
-        addInfoField(
-            securityInfoContainer,
-            R.drawable.ic_security,
-            getString(R.string.is_system_app),
-            if (app.isSystemApp) "Yes" else "No",
-            isLast = true
-        )
+        // SECURITY
+        addInfoField(securityInfoContainer, R.drawable.ic_security, "SHA-256", app.signatureSha256)
+        addInfoField(securityInfoContainer, R.drawable.ic_security, "SHA-1", app.signatureSha1)
+        addInfoField(securityInfoContainer, R.drawable.ic_security, "MD5", app.signatureMD5)
+        addInfoField(securityInfoContainer, R.drawable.ic_security, "System App", if (app.isSystemApp) "Yes" else "No")
 
-        // Components
-        addInfoField(
-            componentsContainer,
-            R.drawable.ic_components,
-            getString(R.string.activities),
-            "${app.activities.size} activities"
-        )
-        addInfoField(
-            componentsContainer,
-            R.drawable.ic_components,
-            getString(R.string.services),
-            "${app.services.size} services"
-        )
-        addInfoField(
-            componentsContainer,
-            R.drawable.ic_components,
-            getString(R.string.receivers),
-            "${app.receivers.size} receivers"
-        )
-        addInfoField(
-            componentsContainer,
-            R.drawable.ic_components,
-            getString(R.string.providers),
-            "${app.providers.size} providers",
-            isLast = true
-        )
+        // COMPONENTS
+        addInfoField(componentsContainer, R.drawable.ic_components, "Activities", "${app.activities.size}")
+        addInfoField(componentsContainer, R.drawable.ic_components, "Services", "${app.services.size}")
+        addInfoField(componentsContainer, R.drawable.ic_components, "Receivers", "${app.receivers.size}")
+        addInfoField(componentsContainer, R.drawable.ic_components, "Providers", "${app.providers.size}")
 
+        // PERMISSIONS (CHIPS)
         // Permissions
         if (app.permissions.isNotEmpty()) {
             app.permissions.forEachIndexed { index, permission ->
@@ -230,8 +170,7 @@ class AppDetailActivity : AppCompatActivity() {
                     permissionsContainer,
                     R.drawable.ic_permission,
                     permissionName,
-                    permission,
-                    isLast = index == app.permissions.size - 1
+                    permission
                 )
             }
         } else {
@@ -239,35 +178,52 @@ class AppDetailActivity : AppCompatActivity() {
                 permissionsContainer,
                 R.drawable.ic_permission,
                 getString(R.string.no_permissions),
-                "",
-                isLast = true
+                ""
             )
         }
     }
+
+    /*private fun addPermissionChips(permissions: List<String>) {
+        permissionsChipGroup.removeAllViews()
+
+        if (permissions.isEmpty()) {
+            val chip = Chip(this).apply {
+                text = "No Permissions"
+            }
+            permissionsChipGroup.addView(chip)
+            return
+        }
+
+        permissions.forEach { permission ->
+            val chip = Chip(this).apply {
+                text = permission.substringAfterLast(".")
+                isClickable = true
+            }
+
+            chip.setOnClickListener {
+                copyToClipboard("Permission", permission)
+            }
+
+            permissionsChipGroup.addView(chip)
+        }
+    }*/
 
     private fun addInfoField(
         container: LinearLayout,
         iconRes: Int,
         label: String,
-        value: String,
-        isLast: Boolean = false
+        value: String
     ) {
         val view = LayoutInflater.from(this).inflate(R.layout.item_info_field, container, false)
 
         val fieldIcon = view.findViewById<ImageView>(R.id.fieldIcon)
         val fieldLabel = view.findViewById<TextView>(R.id.fieldLabel)
         val fieldValue = view.findViewById<TextView>(R.id.fieldValue)
-        val divider = view.findViewById<View>(R.id.divider)
 
         fieldIcon.setImageResource(iconRes)
         fieldLabel.text = label
         fieldValue.text = value
 
-        if (isLast) {
-            divider.visibility = View.GONE
-        }
-
-        // Make field copyable
         view.setOnClickListener {
             if (value.isNotEmpty()) {
                 copyToClipboard(label, value)
@@ -278,51 +234,32 @@ class AppDetailActivity : AppCompatActivity() {
     }
 
     private fun setupButtons(app: AppInfo) {
-        // Open button
+
         openButton.setOnClickListener {
-            val launchIntent = packageManager.getLaunchIntentForPackage(app.packageName)
-            if (launchIntent != null) {
-                startActivity(launchIntent)
-            } else {
-                Toast.makeText(this, R.string.cannot_open_app, Toast.LENGTH_SHORT).show()
-            }
+            val intent = packageManager.getLaunchIntentForPackage(app.packageName)
+            if (intent != null) startActivity(intent)
+            else Toast.makeText(this, "Cannot open app", Toast.LENGTH_SHORT).show()
         }
 
-        // Share button
         shareButton.setOnClickListener {
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_SUBJECT, app.appName)
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    """
-                    App: ${app.appName}
-                    Package: ${app.packageName}
-                    Version: ${app.versionName}
-                    Size: ${AppInfoManager.formatSize(app.size)}
-                    """.trimIndent()
-                )
+                putExtra(Intent.EXTRA_TEXT, "${app.appName}\n${app.packageName}")
             }
-            startActivity(Intent.createChooser(shareIntent, "Share App Info"))
+            startActivity(Intent.createChooser(shareIntent, "Share"))
         }
 
-        // Uninstall button
         uninstallButton.setOnClickListener {
-            if (app.isSystemApp) {
-                Toast.makeText(this, R.string.cannot_uninstall_system_app, Toast.LENGTH_SHORT).show()
-            } else {
-                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                    data = Uri.parse("package:${app.packageName}")
-                }
-                startActivity(intent)
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.parse("package:${app.packageName}")
             }
+            startActivity(intent)
         }
     }
 
     private fun copyToClipboard(label: String, value: String) {
         val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText(label, value)
-        clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show()
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, value))
+        Toast.makeText(this, "Copied", Toast.LENGTH_SHORT).show()
     }
 }

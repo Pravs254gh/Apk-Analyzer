@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout 
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/android:windowBackground">
 
+    <!-- Toolbar -->
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -19,11 +17,12 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:navigationIcon="@drawable/ic_back"
-            app:title="@string/app_info"
-            app:titleTextColor="@color/white" />
+            app:title="App Info"
+            app:titleTextColor="@android:color/white"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -36,7 +35,7 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- App Header Card -->
+            <!-- HEADER -->
             <com.google.android.material.card.MaterialCardView
                 style="@style/CardStyle"
                 android:layout_width="match_parent"
@@ -46,26 +45,27 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
+                    <!-- App Info -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
 
                         <ImageView
                             android:id="@+id/appIcon"
                             android:layout_width="72dp"
                             android:layout_height="72dp"
-                            android:contentDescription="@string/app_name"
-                            tools:src="@mipmap/ic_launcher" />
+                            android:contentDescription="app icon"/>
 
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
                             android:layout_weight="1"
+                            android:layout_marginStart="16dp"
                             android:orientation="vertical">
 
                             <TextView
@@ -73,59 +73,47 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textSize="20sp"
-                                android:textStyle="bold"
-                                tools:text="Chrome" />
+                                android:textStyle="bold"/>
 
                             <TextView
                                 android:id="@+id/developerName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:textSize="14sp"
-                                tools:text="Google LLC" />
+                                android:layout_marginTop="4dp"/>
 
                             <TextView
                                 android:id="@+id/categoryText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:textColor="@color/primary"
-                                android:textSize="12sp"
-                                tools:text="Communication • v120.0.6099.144" />
-
+                                android:textSize="12sp"/>
                         </LinearLayout>
 
                     </LinearLayout>
 
-                    <!-- Action Buttons -->
+                    <!-- Buttons -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/openButton"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:text="@string/open"
-                            app:icon="@drawable/ic_open"
-                            app:iconGravity="textStart" />
+                            android:text="Open"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/shareButton"
                             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
                             android:layout_weight="1"
-                            android:text="@string/share"
-                            app:icon="@drawable/ic_share"
-                            app:iconGravity="textStart" />
+                            android:layout_marginStart="8dp"
+                            android:text="Share"/>
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/uninstallButton"
@@ -133,110 +121,128 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/uninstall"
-                            android:textColor="@color/error"
-                            app:icon="@drawable/ic_delete"
-                            app:iconGravity="textStart"
-                            app:iconTint="@color/error"
-                            app:strokeColor="@color/error" />
-
+                            android:layout_marginStart="8dp"
+                            android:text="Uninstall"/>
                     </LinearLayout>
 
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- General Information Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:drawableStart="@drawable/ic_info"
-                android:drawablePadding="8dp"
-                android:text="@string/general_information"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/CardStyle"
+            <!-- CHIP TABS -->
+            <com.google.android.material.chip.ChipGroup
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                app:singleSelection="true"
+                app:chipSpacing="8dp">
 
-                <LinearLayout
-                    android:id="@+id/generalInfoContainer"
-                    android:layout_width="match_parent"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipGeneral"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:text="General"
+                    android:checked="true"/>
 
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Security Information Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:drawableStart="@drawable/ic_security"
-                android:drawablePadding="8dp"
-                android:text="@string/security_information"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/CardStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:id="@+id/securityInfoContainer"
-                    android:layout_width="match_parent"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSecurity"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:text="Security"/>
 
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Components Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:drawableStart="@drawable/ic_components"
-                android:drawablePadding="8dp"
-                android:text="@string/components"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/CardStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
-
-                <LinearLayout
-                    android:id="@+id/componentsContainer"
-                    android:layout_width="match_parent"
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipComponents"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" />
+                    android:text="Components"/>
 
-            </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipPermissions"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Permissions"/>
 
-            <!-- Permissions Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:drawableStart="@drawable/ic_permission"
-                android:drawablePadding="8dp"
-                android:text="@string/permissions"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <com.google.android.material.card.MaterialCardView
-                style="@style/CardStyle"
+            </com.google.android.material.chip.ChipGroup>
+            <!-- GENERAL -->
+            <LinearLayout
+                android:id="@+id/layoutGeneral"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp">
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/CardStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/generalInfoContainer"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- SECURITY -->
+            <LinearLayout
+                android:id="@+id/layoutSecurity"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/CardStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/securityInfoContainer"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- COMPONENTS -->
+            <LinearLayout
+                android:id="@+id/layoutComponents"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/CardStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/componentsContainer"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+            <!-- PERMISSIONS -->
+            <LinearLayout
+                android:id="@+id/layoutPermissions"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/CardStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                 <LinearLayout
                     android:id="@+id/permissionsContainer"
@@ -245,6 +251,8 @@
                     android:orientation="vertical" />
 
             </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
 
         </LinearLayout>
 
